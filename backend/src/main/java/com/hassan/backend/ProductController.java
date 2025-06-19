@@ -30,4 +30,9 @@ public class ProductController {
     public Product getProductById(@PathVariable("id") Integer id){
         return productService.findProductById(id);
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable("id") Integer id){
+       return productService.deleteProductById(id);
+    }
 }

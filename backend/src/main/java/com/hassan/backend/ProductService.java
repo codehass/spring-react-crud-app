@@ -28,4 +28,8 @@ public class ProductService {
         return productRepository.findById(id).orElseThrow(()-> new IllegalStateException("Product not found with id: " + id));
     }
 
+    public ResponseEntity<Void> deleteProductById(Integer id){
+        productRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
