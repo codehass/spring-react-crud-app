@@ -1,8 +1,8 @@
 package com.hassan.backend;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,5 +19,10 @@ public class ProductController {
     @GetMapping
     public List<Product> getAllProducts(){
         return productService.getProducts();
+    }
+
+    @PostMapping
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product){
+        return productService.insertNewProduct(product);
     }
 }
