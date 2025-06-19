@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 
 import java.math.BigDecimal;
 
+@Entity
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +16,9 @@ public class Product {
     private BigDecimal price;
     private String description;
     private Integer quantity;
+
+    public Product() {
+    }
 
     public Product(Integer id, String name, BigDecimal price, String description, Integer quantity) {
         this.id = id;
