@@ -25,4 +25,9 @@ public class ProductController {
     public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product){
         return productService.insertNewProduct(product);
     }
+
+    @GetMapping("{id}")
+    public Product getProductById(@PathVariable("id") Integer id){
+        return productService.findProductById(id);
+    }
 }

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -22,4 +23,9 @@ public class ProductService {
         Product saved = productRepository.save(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
+
+    public Product findProductById(Integer id) {
+        return productRepository.findById(id).orElseThrow(()-> new IllegalStateException("Product not found with id: " + id));
+    }
+
 }
