@@ -1,10 +1,10 @@
 package com.hassan.backend;
 
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -23,7 +23,8 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product){
-        return productService.insertNewProduct(product);
+        Product saved = productService.insertNewProduct(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @GetMapping("{id}")
@@ -33,6 +34,17 @@ public class ProductController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable("id") Integer id){
-       return productService.deleteProductById(id);
+        productService.deleteProductById(id);
+        return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Product> updateProduct(
+            @PathVariable("id") Integer id,
+            @Valid @RequestBody Product updatedProduct) {
+
+        Product product = productService.updateProduct(id, updatedProduct);
+        return ResponseEntity.ok(product);
+    }
+
 }
