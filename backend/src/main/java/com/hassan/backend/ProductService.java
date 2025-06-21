@@ -21,16 +21,20 @@ public class ProductService {
     }
 
     public Product findProductById(Integer id) {
-        return productRepository.findById(id).orElseThrow(()-> new IllegalStateException("Product not found with id: " + id));
+        return productRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Product not found with id: " + id));
     }
 
     public void deleteProductById(Integer id){
-        productRepository.deleteById(id);
+        Product product = productRepository.findById(id).orElseThrow(
+                ()-> new ResourceNotFoundException("Product not found with id: " + id)
+        );
+        productRepository.delete(product);
     }
 
     public Product updateProduct(Integer id, Product updatedProduct) {
         Product existing = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id)
+                );
 
         existing.setName(updatedProduct.getName());
         existing.setPrice(updatedProduct.getPrice());
