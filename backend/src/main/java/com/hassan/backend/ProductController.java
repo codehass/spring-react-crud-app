@@ -28,8 +28,9 @@ public class ProductController {
     }
 
     @GetMapping("{id}")
-    public Product getProductById(@PathVariable("id") Integer id){
-        return productService.findProductById(id);
+    public ResponseEntity<Product> getProductById(@PathVariable("id") Integer id) {
+        Product product = productService.findProductById(id);
+        return ResponseEntity.ok(product);
     }
 
     @DeleteMapping("{id}")
