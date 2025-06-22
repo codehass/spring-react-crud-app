@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import Input from "../components/Input";
+import Button from "../components/Button";
+import Textarea from "../components/Textarea";
 
 interface NewProduct {
 	name: string;
@@ -18,6 +21,7 @@ function AddProductPage() {
 	});
 	const [error, setError] = useState<string | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -33,6 +37,7 @@ function AddProductPage() {
 		e.preventDefault();
 		setIsSubmitting(true);
 		setError(null);
+		setFieldErrors({});
 
 		try {
 			const response = await fetch("http://localhost:8080/api/v1/products", {
@@ -42,9 +47,20 @@ function AddProductPage() {
 			});
 
 			if (!response.ok) {
-				throw new Error(
-					`Failed to create product: ${response.status} ${response.statusText}`
-				);
+				const errorData = await response.json();
+
+				if (response.status === 400 && Array.isArray(errorData.errors)) {
+					// Map field-specific errors
+					const errors: Record<string, string> = {};
+					for (const err of errorData.errors) {
+						errors[err.field] = err.message;
+					}
+					setFieldErrors(errors);
+				} else {
+					throw new Error(errorData.title || "Something went wrong");
+				}
+
+				return;
 			}
 
 			const savedProduct = await response.json();
@@ -59,82 +75,71 @@ function AddProductPage() {
 			setIsSubmitting(false);
 		}
 	};
-
 	const handleCancel = () => {
 		navigate("/products");
 	};
 
 	return (
-		<div>
-			<header>
-				<h1>Add New Product</h1>
-			</header>
+		<div className="max-w-xl mx-auto p-6">
+			<h1 className="text-2xl font-bold mb-6">Add New Product</h1>
 
-			<main>
-				<form onSubmit={handleSubmit}>
-					<div>
-						<label htmlFor="name">Name:</label>
-						<input
-							id="name"
-							type="text"
-							name="name"
-							value={product.name}
-							onChange={handleChange}
-							required
-							minLength={2}
-						/>
-					</div>
+			<form onSubmit={handleSubmit} className="space-y-6">
+				<Input
+					label="Name"
+					type="text"
+					name="name"
+					value={product.name}
+					handleChange={handleChange}
+					error={fieldErrors.name}
+				/>
 
-					<div>
-						<label htmlFor="price">Price:</label>
-						<input
-							id="price"
-							type="number"
-							name="price"
-							value={product.price || ""}
-							onChange={handleChange}
-							min="0"
-							step="0.01"
-							required
-						/>
-					</div>
+				<Input
+					label="Price"
+					type="number"
+					name="price"
+					value={product.price}
+					handleChange={handleChange}
+					error={fieldErrors.price}
+				/>
 
-					<div>
-						<label htmlFor="quantity">Quantity:</label>
-						<input
-							id="quantity"
-							type="number"
-							name="quantity"
-							value={product.quantity || ""}
-							onChange={handleChange}
-							min="0"
-							required
-						/>
-					</div>
+				<Input
+					label="Quantity"
+					type="number"
+					name="quantity"
+					value={product.quantity}
+					handleChange={handleChange}
+					error={fieldErrors.quantity}
+				/>
 
-					<div>
-						<label htmlFor="description">Description:</label>
-						<textarea
-							id="description"
-							name="description"
-							value={product.description}
-							onChange={handleChange}
-							rows={4}
-						/>
-					</div>
+				<Textarea
+					id="description"
+					label="Description"
+					name="description"
+					value={product.description}
+					handleChange={handleChange}
+					error={fieldErrors.description}
+					rows={4}
+				/>
 
-					<div>
-						<button type="submit" disabled={isSubmitting}>
-							{isSubmitting ? "Creating..." : "Create Product"}
-						</button>
-						<button type="button" onClick={handleCancel}>
-							Cancel
-						</button>
-					</div>
-				</form>
+				{error && (
+					<p className="text-sm text-red-600 bg-red-100 p-2 rounded">{error}</p>
+				)}
 
-				{error && <div>Error: {error}</div>}
-			</main>
+				<div className="flex gap-4">
+					<Button type="submit" isLoading={isSubmitting}>
+						Create Product
+					</Button>
+
+					<Button
+						type="button"
+						onClick={handleCancel}
+						variant="secondary"
+						disabled={isSubmitting}
+					>
+						Cancel
+					</Button>
+				</div>
+			</form>
 		</div>
 	);
 }
