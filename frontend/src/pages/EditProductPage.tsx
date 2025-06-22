@@ -3,6 +3,9 @@ import { useParams, useNavigate } from "react-router";
 import Input from "../components/Input";
 import Textarea from "../components/Textarea";
 import Button from "../components/Button";
+import Spinner from "../components/Spinner";
+import PageHeader from "../components/PageHeader";
+import ErrorMessage from "../components/ErrorMessage";
 
 interface Product {
 	id: number;
@@ -32,7 +35,7 @@ function EditProductPage() {
 		const fetchProduct = async () => {
 			try {
 				const response = await fetch(
-					`http://localhost:8080/api/v1/products/${productId}`
+					`http://localhost:8080/api/v1/producs/${productId}`
 				);
 
 				if (!response.ok) {
@@ -61,7 +64,7 @@ function EditProductPage() {
 
 		setIsSubmitting(true);
 		setError(null);
-		setFieldErrors({}); // clear previous errors
+		setFieldErrors({});
 
 		try {
 			const response = await fetch(
@@ -114,23 +117,30 @@ function EditProductPage() {
 	};
 
 	if (loading) {
-		return <div>Loading product details...</div>;
+		return (
+			<div className="flex justify-center items-center h-full w-full py-20">
+				<Spinner />
+			</div>
+		);
 	}
 
 	if (error) {
-		return <div className="text-red-600">Error: {error}</div>;
-	}
-
-	if (!product) {
-		return <div>Product not found</div>;
+		return (
+			<ErrorMessage
+				message={
+					error.includes("404")
+						? "The product you're looking for was not found."
+						: error
+				}
+				actionText="Back to Products"
+				actionLink="/products"
+			/>
+		);
 	}
 
 	return (
 		<div className="max-w-xl mx-auto p-6">
-			<header>
-				<h1 className="text-2xl font-bold mb-6">Edit Product</h1>
-			</header>
-
+			<PageHeader title="Edit Product" />
 			<main>
 				<form onSubmit={handleSubmit} noValidate>
 					<Input
@@ -138,7 +148,7 @@ function EditProductPage() {
 						label="Name"
 						name="name"
 						type="text"
-						value={product.name}
+						value={product?.name}
 						handleChange={handleChange}
 						error={fieldErrors.name}
 						required
@@ -151,7 +161,7 @@ function EditProductPage() {
 						label="Price"
 						name="price"
 						type="number"
-						value={product.price}
+						value={product?.price}
 						handleChange={handleChange}
 						error={fieldErrors.price}
 						required
@@ -165,7 +175,7 @@ function EditProductPage() {
 						label="Quantity"
 						name="quantity"
 						type="number"
-						value={product.quantity}
+						value={product?.quantity}
 						handleChange={handleChange}
 						error={fieldErrors.quantity}
 						required
@@ -177,7 +187,7 @@ function EditProductPage() {
 						id="description"
 						label="Description"
 						name="description"
-						value={product.description}
+						value={product?.description}
 						handleChange={handleChange}
 						error={fieldErrors.description}
 						rows={4}

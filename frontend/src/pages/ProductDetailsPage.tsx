@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
-import Button from "../components/Button";
+import Spinner from "../components/Spinner";
+import PageHeader from "../components/PageHeader";
+import { Pencil } from "lucide-react";
+import ErrorMessage from "../components/ErrorMessage";
 
 interface Product {
 	id: number;
@@ -50,46 +53,71 @@ function ProductDetailsPage() {
 	}, [productId]);
 
 	if (loading) {
-		return <div>Loading product details...</div>;
+		return (
+			<div className="flex justify-center items-center h-full w-full py-20">
+				<Spinner />
+			</div>
+		);
 	}
 
 	if (error) {
-		return <div className="text-red-600">Error: {error}</div>;
-	}
-
-	if (!product) {
-		return <div>Product not found</div>;
+		return (
+			<ErrorMessage
+				message={
+					error.includes("404")
+						? "The product you're looking for was not found."
+						: error
+				}
+				actionText="Back to Products"
+				actionLink="/products"
+			/>
+		);
 	}
 
 	return (
-		<div className="max-w-xl mx-auto p-6">
-			<header className="flex items-center justify-between mb-6">
-				<h1 className="text-3xl font-bold">{product.name}</h1>
-				<Link to={`/products/${product.id}/edit`}>
-					<Button>Edit Product</Button>
-				</Link>
-			</header>
+		<div className="max-w-2xl mx-auto p-6">
+			<PageHeader title={`Product: ${product?.name}`} />
 
-			<main className="space-y-4">
-				<section>
-					<h2 className="text-xl font-semibold mb-2">Product Information</h2>
-					<p>
-						<strong>Description:</strong> {product.description || "N/A"}
-					</p>
-					<p>
-						<strong>Price:</strong> ${product.price.toFixed(2)}
-					</p>
-					<p>
-						<strong>In Stock:</strong> {product.quantity}
-					</p>
-				</section>
-			</main>
+			<div className="bg-white shadow-md rounded-lg p-6 border border-gray-200">
+				<h2 className="text-xl font-semibold text-violet-700 mb-4">
+					Product Information
+				</h2>
 
-			<footer className="mt-6">
-				<Link to="/products" className="text-violet-600 hover:underline">
-					Back to Products
-				</Link>
-			</footer>
+				<div className="space-y-3 text-gray-700">
+					<div>
+						<span className="font-semibold">Name:</span>{" "}
+						<span>{product?.name}</span>
+					</div>
+					<div>
+						<span className="font-semibold">Description:</span>{" "}
+						<span>{product?.description || "N/A"}</span>
+					</div>
+					<div>
+						<span className="font-semibold">Price:</span>{" "}
+						<span>${product?.price.toFixed(2)}</span>
+					</div>
+					<div>
+						<span className="font-semibold">Quantity in stock:</span>{" "}
+						<span>{product?.quantity}</span>
+					</div>
+				</div>
+
+				<div className="mt-6 flex gap-4">
+					<Link
+						to={`/products/${product?.id}/edit`}
+						className="inline-flex items-center gap-2 bg-violet-600 text-white px-4 py-2 rounded hover:bg-violet-700 transition"
+					>
+						<Pencil size={16} />
+						Edit
+					</Link>
+					<Link
+						to="/products"
+						className="inline-flex items-center px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 transition text-gray-700"
+					>
+						Back to Products
+					</Link>
+				</div>
+			</div>
 		</div>
 	);
 }
