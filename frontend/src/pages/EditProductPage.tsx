@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
+import Input from "../components/Input";
+import Textarea from "../components/Textarea";
+import Button from "../components/Button";
 
 interface Product {
 	id: number;
@@ -17,6 +20,7 @@ function EditProductPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
 	useEffect(() => {
 		if (!productId) {
@@ -56,6 +60,8 @@ function EditProductPage() {
 		if (!product) return;
 
 		setIsSubmitting(true);
+		setError(null);
+		setFieldErrors({}); // clear previous errors
 
 		try {
 			const response = await fetch(
@@ -68,9 +74,17 @@ function EditProductPage() {
 			);
 
 			if (!response.ok) {
-				throw new Error(
-					`Update failed: ${response.status} ${response.statusText}`
-				);
+				const errorData = await response.json();
+				if (response.status === 400 && Array.isArray(errorData.errors)) {
+					const errors: Record<string, string> = {};
+					for (const err of errorData.errors) {
+						errors[err.field] = err.message;
+					}
+					setFieldErrors(errors);
+				} else {
+					throw new Error(errorData.title || "Update failed");
+				}
+				return;
 			}
 
 			navigate(`/products/${product.id}`, {
@@ -104,7 +118,7 @@ function EditProductPage() {
 	}
 
 	if (error) {
-		return <div style={{ color: "red" }}>Error: {error}</div>;
+		return <div className="text-red-600">Error: {error}</div>;
 	}
 
 	if (!product) {
@@ -112,94 +126,76 @@ function EditProductPage() {
 	}
 
 	return (
-		<div>
+		<div className="max-w-xl mx-auto p-6">
 			<header>
-				<h1>Edit Product</h1>
+				<h1 className="text-2xl font-bold mb-6">Edit Product</h1>
 			</header>
 
 			<main>
-				<form onSubmit={handleSubmit}>
-					<div style={{ marginBottom: "1rem" }}>
-						<label
-							htmlFor="name"
-							style={{ display: "block", marginBottom: "0.5rem" }}
-						>
-							Name:
-						</label>
-						<input
-							id="name"
-							type="text"
-							name="name"
-							value={product.name}
-							onChange={handleChange}
-							required
-							style={{ width: "100%", padding: "0.5rem" }}
-						/>
-					</div>
+				<form onSubmit={handleSubmit} noValidate>
+					<Input
+						id="name"
+						label="Name"
+						name="name"
+						type="text"
+						value={product.name}
+						handleChange={handleChange}
+						error={fieldErrors.name}
+						required
+						minLength={2}
+						placeholder="Enter product name"
+					/>
 
-					<div style={{ marginBottom: "1rem" }}>
-						<label
-							htmlFor="price"
-							style={{ display: "block", marginBottom: "0.5rem" }}
-						>
-							Price:
-						</label>
-						<input
-							id="price"
-							type="number"
-							name="price"
-							value={product.price}
-							onChange={handleChange}
-							min="0"
-							step="0.01"
-							required
-							style={{ width: "100%", padding: "0.5rem" }}
-						/>
-					</div>
+					<Input
+						id="price"
+						label="Price"
+						name="price"
+						type="number"
+						value={product.price}
+						handleChange={handleChange}
+						error={fieldErrors.price}
+						required
+						min={0}
+						step={0.01}
+						placeholder="Enter price"
+					/>
 
-					<div style={{ marginBottom: "1rem" }}>
-						<label
-							htmlFor="quantity"
-							style={{ display: "block", marginBottom: "0.5rem" }}
-						>
-							Quantity:
-						</label>
-						<input
-							id="quantity"
-							type="number"
-							name="quantity"
-							value={product.quantity}
-							onChange={handleChange}
-							min="0"
-							required
-							style={{ width: "100%", padding: "0.5rem" }}
-						/>
-					</div>
+					<Input
+						id="quantity"
+						label="Quantity"
+						name="quantity"
+						type="number"
+						value={product.quantity}
+						handleChange={handleChange}
+						error={fieldErrors.quantity}
+						required
+						min={0}
+						placeholder="Enter quantity"
+					/>
 
-					<div style={{ marginBottom: "1rem" }}>
-						<label
-							htmlFor="description"
-							style={{ display: "block", marginBottom: "0.5rem" }}
-						>
-							Description:
-						</label>
-						<textarea
-							id="description"
-							name="description"
-							value={product.description}
-							onChange={handleChange}
-							rows={4}
-							style={{ width: "100%", padding: "0.5rem" }}
-						/>
-					</div>
+					<Textarea
+						id="description"
+						label="Description"
+						name="description"
+						value={product.description}
+						handleChange={handleChange}
+						error={fieldErrors.description}
+						rows={4}
+						placeholder="Write a short description..."
+					/>
 
-					<div style={{ display: "flex", gap: "1rem" }}>
-						<button type="submit" disabled={isSubmitting}>
-							{isSubmitting ? "Saving..." : "Save"}
-						</button>
-						<button type="button" onClick={handleCancel}>
+					<div className="flex gap-4">
+						<Button type="submit" isLoading={isSubmitting}>
+							Save
+						</Button>
+						<Button
+							type="button"
+							variant="secondary"
+							disabled={isSubmitting}
+							onClick={handleCancel}
+						>
 							Cancel
-						</button>
+						</Button>
 					</div>
 				</form>
 			</main>
