@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
+import Button from "../components/Button";
 
 interface Product {
 	id: number;
@@ -53,7 +54,7 @@ function ProductDetailsPage() {
 	}
 
 	if (error) {
-		return <div style={{ color: "red" }}>Error: {error}</div>;
+		return <div className="text-red-600">Error: {error}</div>;
 	}
 
 	if (!product) {
@@ -61,19 +62,19 @@ function ProductDetailsPage() {
 	}
 
 	return (
-		<div>
-			<header>
-				<h1>{product.name}</h1>
+		<div className="max-w-xl mx-auto p-6">
+			<header className="flex items-center justify-between mb-6">
+				<h1 className="text-3xl font-bold">{product.name}</h1>
 				<Link to={`/products/${product.id}/edit`}>
-					<button>Edit Product</button>
+					<Button>Edit Product</Button>
 				</Link>
 			</header>
 
-			<main>
+			<main className="space-y-4">
 				<section>
-					<h2>Product Information</h2>
+					<h2 className="text-xl font-semibold mb-2">Product Information</h2>
 					<p>
-						<strong>Description:</strong> {product.description}
+						<strong>Description:</strong> {product.description || "N/A"}
 					</p>
 					<p>
 						<strong>Price:</strong> ${product.price.toFixed(2)}
@@ -84,8 +85,10 @@ function ProductDetailsPage() {
 				</section>
 			</main>
 
-			<footer>
-				<Link to="/products">Back to Products</Link>
+			<footer className="mt-6">
+				<Link to="/products" className="text-violet-600 hover:underline">
+					Back to Products
+				</Link>
 			</footer>
 		</div>
 	);
