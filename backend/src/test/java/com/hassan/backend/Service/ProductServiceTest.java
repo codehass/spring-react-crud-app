@@ -1,9 +1,11 @@
 package com.hassan.backend.Service;
 
 import com.hassan.backend.Model.Product;
+import com.hassan.backend.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
@@ -135,6 +137,30 @@ class ProductServiceTest {
 
     @Test
     void deleteProductById() {
+        // Arrange
+        Product product = new Product();
+        product.setName("Product to delete");
+        product.setPrice(BigDecimal.valueOf(9.99));
+        product.setDescription("Description to delete");
+        product.setQuantity(3);
+        
+        when(productRepository.findById(1)).thenReturn(Optional.of(product));
+        doNothing().when(productRepository).delete(any(Product.class));
+
+        // Act
+        productService.deleteProductById(1);
+
+        // Assert
+        verify(productRepository, times(1)).findById(1);
+        verify(productRepository, times(1)).delete(product);
+    
+        verify(productRepository, times(1)).delete(product);
+    }
+
+    @Test
+    void findProductById_shouldThrowException_whenProductNotFound() {
+        when(productRepository.findById(99)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> productService.findProductById(99));
     }
 
     @Test
