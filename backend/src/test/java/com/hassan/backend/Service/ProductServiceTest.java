@@ -17,6 +17,7 @@ import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
@@ -110,6 +111,26 @@ class ProductServiceTest {
 
     @Test
     void findProductById() {
+        // Arrange
+        Product product = new Product();
+        product.setName("Product A");
+        product.setPrice(BigDecimal.valueOf(10.99));
+        product.setDescription("Description A");
+        product.setQuantity(5);
+
+        when(productRepository.findById(1)).thenReturn(Optional.of(product));
+
+        // Act
+        Product foundProduct = productService.findProductById(1);
+
+        // Assert
+        assertNotNull(foundProduct);
+        assertEquals(product.getName(), foundProduct.getName());
+        assertEquals(product.getPrice(), foundProduct.getPrice());
+        assertEquals(product.getDescription(), foundProduct.getDescription());
+        assertEquals(product.getQuantity(), foundProduct.getQuantity());
+
+        verify(productRepository, times(1)).findById(1);
     }
 
     @Test
