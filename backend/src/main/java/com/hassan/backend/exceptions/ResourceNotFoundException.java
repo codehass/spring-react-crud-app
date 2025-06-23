@@ -1,4 +1,4 @@
-package com.hassan.backend;
+package com.hassan.backend.exceptions;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {

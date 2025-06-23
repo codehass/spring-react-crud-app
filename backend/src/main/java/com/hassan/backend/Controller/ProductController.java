@@ -1,5 +1,7 @@
-package com.hassan.backend;
+package com.hassan.backend.Controller;
 
+import com.hassan.backend.Model.Product;
+import com.hassan.backend.Service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

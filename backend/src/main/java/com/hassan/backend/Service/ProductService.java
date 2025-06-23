@@ -1,5 +1,8 @@
-package com.hassan.backend;
+package com.hassan.backend.Service;
 
+import com.hassan.backend.Model.Product;
+import com.hassan.backend.Repository.ProductRepository;
+import com.hassan.backend.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
