@@ -12,9 +12,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -87,6 +86,26 @@ class ProductServiceTest {
 
     @Test
     void insertNewProduct() {
+        //Arrange
+        Product newProduct = new Product();
+        newProduct.setName("New Product");
+        newProduct.setPrice(BigDecimal.valueOf(15.99));
+        newProduct.setDescription("New product description");
+        newProduct.setQuantity(20);
+
+        when(productRepository.save(any(Product.class))).thenReturn(newProduct);
+
+        //Act
+        Product savedProduct = productService.insertNewProduct(newProduct);
+
+        //Assert
+        assertNotNull(savedProduct);
+        assertEquals(newProduct.getName(), savedProduct.getName());
+        assertEquals(newProduct.getPrice(), savedProduct.getPrice());
+        assertEquals(newProduct.getDescription(), savedProduct.getDescription());
+        assertEquals(newProduct.getQuantity(), savedProduct.getQuantity());
+
+        verify(productRepository, times(1)).save(newProduct);
     }
 
     @Test
