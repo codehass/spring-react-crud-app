@@ -35,7 +35,7 @@ function EditProductPage() {
 		const fetchProduct = async () => {
 			try {
 				const response = await fetch(
-					`http://localhost:8080/api/v1/producs/${productId}`
+					`http://localhost:8080/api/v1/products/${productId}`
 				);
 
 				if (!response.ok) {
