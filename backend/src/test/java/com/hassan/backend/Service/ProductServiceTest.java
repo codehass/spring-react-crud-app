@@ -91,9 +91,9 @@ class ProductServiceTest {
     void insertNewProduct() {
         //Arrange
         Product newProduct = new Product();
-        newProduct.setName("New Product");
+        newProduct.setName("Product A");
         newProduct.setPrice(BigDecimal.valueOf(15.99));
-        newProduct.setDescription("New product description");
+        newProduct.setDescription("Description product A");
         newProduct.setQuantity(20);
 
         when(productRepository.save(any(Product.class))).thenReturn(newProduct);
@@ -139,9 +139,9 @@ class ProductServiceTest {
     void deleteProductById() {
         // Arrange
         Product product = new Product();
-        product.setName("Product to delete");
+        product.setName("Product A");
         product.setPrice(BigDecimal.valueOf(9.99));
-        product.setDescription("Description to delete");
+        product.setDescription("Description product A");
         product.setQuantity(3);
         
         when(productRepository.findById(1)).thenReturn(Optional.of(product));
@@ -165,5 +165,33 @@ class ProductServiceTest {
 
     @Test
     void updateProduct() {
+        // Arrange
+        Product existingProduct = new Product();
+        existingProduct.setName("Product A");
+        existingProduct.setPrice(BigDecimal.valueOf(19.99));
+        existingProduct.setDescription("A product description");
+        existingProduct.setQuantity(10);
+
+        Product updatedProduct = new Product();
+        updatedProduct.setName("Product B");
+        updatedProduct.setPrice(BigDecimal.valueOf(29.99));
+        updatedProduct.setDescription("B product description");
+        updatedProduct.setQuantity(15);
+
+        when(productRepository.findById(1)).thenReturn(Optional.of(existingProduct));
+        when(productRepository.save(any(Product.class))).thenReturn(updatedProduct);
+
+        // Act
+        Product result = productService.updateProduct(1, updatedProduct);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(updatedProduct.getName(), result.getName());
+        assertEquals(updatedProduct.getPrice(), result.getPrice());
+        assertEquals(updatedProduct.getDescription(), result.getDescription());
+        assertEquals(updatedProduct.getQuantity(), result.getQuantity());
+
+        verify(productRepository, times(1)).findById(1);
+        verify(productRepository, times(1)).save(any(Product.class));
     }
 }
