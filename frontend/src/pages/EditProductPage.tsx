@@ -6,7 +6,7 @@ import Button from "../components/Button";
 import Spinner from "../components/Spinner";
 import PageHeader from "../components/PageHeader";
 import ErrorMessage from "../components/ErrorMessage";
-import type { Product } from "../components/types/product";
+import type { Product } from "../types/product";
 
 function EditProductPage() {
 	const { productId } = useParams<{ productId: string }>();

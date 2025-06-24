@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import type { ErrorMessageProps } from "./types/product";
+import type { ErrorMessageProps } from "../types/product";
 
 function ErrorMessage({ message, actionText, actionLink }: ErrorMessageProps) {
 	return (

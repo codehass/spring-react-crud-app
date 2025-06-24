@@ -4,7 +4,7 @@ import Spinner from "../components/Spinner";
 import PageHeader from "../components/PageHeader";
 import { Pencil } from "lucide-react";
 import ErrorMessage from "../components/ErrorMessage";
-import type { Product } from "../components/types/product";
+import type { Product } from "../types/product";
 
 function ProductDetailsPage() {
 	const { productId } = useParams<{ productId: string }>();

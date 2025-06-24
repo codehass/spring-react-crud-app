@@ -2,7 +2,7 @@ import { LogOut, User } from "lucide-react";
 import { Outlet, useNavigate } from "react-router";
 import Sidebar from "./Sidebar";
 import { useAuth } from "../hooks/useAuth";
-import type { AuthUser } from "./types/product";
+import type { AuthUser } from "../types/product";
 
 function AppLayout() {
 	const navigate = useNavigate();

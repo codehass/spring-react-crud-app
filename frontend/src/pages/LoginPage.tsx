@@ -1,5 +1,5 @@
-import GitHubIcon from "../components/icons/GitHubIcon";
-import GoogleIcon from "../components/icons/GoogleIcon";
+import GitHubIcon from "../icons/GitHubIcon";
+import GoogleIcon from "../icons/GoogleIcon";
 
 const LoginPage = () => {
 	const redirectTo = (provider: "github" | "google") => {

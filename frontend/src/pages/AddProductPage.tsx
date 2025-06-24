@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Textarea from "../components/Textarea";
-import type { NewProduct } from "../components/types/product";
+import type { NewProduct } from "../types/product";
 
 function AddProductPage() {
 	const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import React from "react";
-import type { TextareaProps } from "./types/product";
+import type { TextareaProps } from "../types/product";
 
 const Textarea: React.FC<TextareaProps> = ({
 	label,

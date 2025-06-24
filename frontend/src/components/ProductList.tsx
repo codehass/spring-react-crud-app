@@ -5,7 +5,7 @@ import Spinner from "./Spinner";
 import ProductActions from "./ProductActions";
 import ErrorMessage from "./ErrorMessage";
 import ConfirmationModal from "./Confirmation";
-import type { Product } from "./types/product";
+import type { Product } from "../types/product";
 
 function ProductDetails() {
 	const [products, setProducts] = useState<Product[]>([]);
@@ -24,7 +24,7 @@ function ProductDetails() {
 		if (deletingProductId === null) return;
 		try {
 			const res = await fetch(
-				`http://localhost:8080/api/v1/proucts/${deletingProductId}`,
+				`http://localhost:8080/api/v1/products/${deletingProductId}`,
 				{
 					method: "DELETE",
 					credentials: "include",

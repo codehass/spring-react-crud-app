@@ -1,7 +1,7 @@
 // components/ui/Button.tsx
 import React from "react";
 import clsx from "clsx";
-import type { ButtonProps } from "./types/product";
+import type { ButtonProps } from "../types/product";
 
 const Button: React.FC<ButtonProps> = ({
 	children,
