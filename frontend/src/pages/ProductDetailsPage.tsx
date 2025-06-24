@@ -4,14 +4,7 @@ import Spinner from "../components/Spinner";
 import PageHeader from "../components/PageHeader";
 import { Pencil } from "lucide-react";
 import ErrorMessage from "../components/ErrorMessage";
-
-interface Product {
-	id: number;
-	name: string;
-	price: number;
-	description: string;
-	quantity: number;
-}
+import type { Product } from "../components/types/product";
 
 function ProductDetailsPage() {
 	const { productId } = useParams<{ productId: string }>();
@@ -29,7 +22,10 @@ function ProductDetailsPage() {
 		const fetchProduct = async () => {
 			try {
 				const response = await fetch(
-					`http://localhost:8080/api/v1/products/${productId}`
+					`http://localhost:8080/api/v1/products/${productId}`,
+					{
+						credentials: "include",
+					}
 				);
 
 				if (!response.ok) {

@@ -1,11 +1,7 @@
 // components/ui/Button.tsx
 import React from "react";
 import clsx from "clsx";
-
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-	variant?: "primary" | "secondary";
-	isLoading?: boolean;
-}
+import type { ButtonProps } from "./types/product";
 
 const Button: React.FC<ButtonProps> = ({
 	children,

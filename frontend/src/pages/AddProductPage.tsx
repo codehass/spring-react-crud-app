@@ -3,13 +3,7 @@ import { useNavigate } from "react-router";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Textarea from "../components/Textarea";
-
-interface NewProduct {
-	name: string;
-	price: number;
-	description: string;
-	quantity: number;
-}
+import type { NewProduct } from "../components/types/product";
 
 function AddProductPage() {
 	const navigate = useNavigate();
@@ -23,6 +17,7 @@ function AddProductPage() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
+	// Handle input changes.
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) => {
@@ -33,6 +28,7 @@ function AddProductPage() {
 		});
 	};
 
+	// Handle form submission. It sends a POST request to the API to create a new product.
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsSubmitting(true);
@@ -44,6 +40,7 @@ function AddProductPage() {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(product),
+				credentials: "include",
 			});
 
 			if (!response.ok) {

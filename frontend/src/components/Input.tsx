@@ -1,11 +1,6 @@
 import clsx from "clsx";
 import React from "react";
-
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-	label: string;
-	error?: string;
-	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
+import type { InputProps } from "./types/product";
 
 const Input: React.FC<InputProps> = ({
 	label,
