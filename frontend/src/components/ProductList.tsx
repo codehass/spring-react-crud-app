@@ -4,24 +4,48 @@ import { Link } from "react-router";
 import Spinner from "./Spinner";
 import ProductActions from "./ProductActions";
 import ErrorMessage from "./ErrorMessage";
-
-interface Product {
-	id: number;
-	name: string;
-	price: number;
-	description: string;
-	quantity: number;
-}
+import ConfirmationModal from "./ConfirmationModal";
+import type { Product } from "./types/product";
 
 function ProductDetails() {
 	const [products, setProducts] = useState<Product[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
+	const [deletingProductId, setDeletingProductId] = useState<number | null>(
+		null
+	);
 
+	// Function to handle delete action
+	const handleDelete = async (id: number) => {
+		setDeletingProductId(id);
+	};
+
+	const confirmDelete = async () => {
+		if (deletingProductId === null) return;
+		try {
+			const res = await fetch(
+				`http://localhost:8080/api/v1/proucts/${deletingProductId}`,
+				{
+					method: "DELETE",
+					credentials: "include",
+				}
+			);
+			if (!res.ok) throw new Error("Failed to delete");
+			setProducts((prev) => prev.filter((p) => p.id !== deletingProductId));
+		} catch (err) {
+			console.error(err);
+		} finally {
+			setDeletingProductId(null);
+		}
+	};
+
+	// fetch products from the API, handle loading and error states
 	useEffect(() => {
 		const fetchProducts = async () => {
 			try {
-				const response = await fetch("http://localhost:8080/api/v1/products");
+				const response = await fetch("http://localhost:8080/api/v1/products", {
+					credentials: "include",
+				});
 
 				if (!response.ok) {
 					throw new Error(
@@ -43,6 +67,7 @@ function ProductDetails() {
 		fetchProducts();
 	}, []);
 
+	// Render loading spinner
 	if (loading) {
 		return (
 			<div className="flex justify-center items-center h-full w-full py-20">
@@ -51,6 +76,7 @@ function ProductDetails() {
 		);
 	}
 
+	// Render error message
 	if (error) {
 		return (
 			<ErrorMessage
@@ -65,6 +91,7 @@ function ProductDetails() {
 		);
 	}
 
+	//Render empty state if no product is available
 	if (products.length === 0) {
 		return (
 			<div className="flex flex-col items-center justify-center text-center py-16 px-4">
@@ -82,6 +109,7 @@ function ProductDetails() {
 		);
 	}
 
+	// Render product list
 	return (
 		<div className="flex flex-col justify-center items-stretch w-full">
 			{" "}
@@ -94,6 +122,7 @@ function ProductDetails() {
 					</button>
 				</Link>
 			</header>
+			{/* Render product as table */}
 			<div className="px-4">
 				<table className="text-sm w-full">
 					<thead className="text-gray-400 text-left">
@@ -119,13 +148,20 @@ function ProductDetails() {
 								<td>{product.quantity}</td>
 								<td className="truncate max-w-xs">{product.description}</td>
 								<td className="pr-4">
-									<ProductActions id={product.id} />
+									{/* Render product actions, view, edit and delete */}
+									<ProductActions id={product.id} onDelete={handleDelete} />
 								</td>
 							</tr>
 						))}
 					</tbody>
 				</table>
 			</div>
+			{/* Render confirmation modal for delete action */}
+			<ConfirmationModal
+				open={deletingProductId !== null}
+				onConfirm={confirmDelete}
+				onCancel={() => setDeletingProductId(null)}
+			/>
 		</div>
 	);
 }
