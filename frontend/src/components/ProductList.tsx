@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import Spinner from "./Spinner";
 import ProductActions from "./ProductActions";
 import ErrorMessage from "./ErrorMessage";
-import ConfirmationModal from "./ConfirmationModal";
+import ConfirmationModal from "./Confirmation";
 import type { Product } from "./types/product";
 
 function ProductDetails() {

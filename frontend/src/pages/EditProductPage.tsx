@@ -6,14 +6,7 @@ import Button from "../components/Button";
 import Spinner from "../components/Spinner";
 import PageHeader from "../components/PageHeader";
 import ErrorMessage from "../components/ErrorMessage";
-
-interface Product {
-	id: number;
-	name: string;
-	price: number;
-	description: string;
-	quantity: number;
-}
+import type { Product } from "../components/types/product";
 
 function EditProductPage() {
 	const { productId } = useParams<{ productId: string }>();
@@ -25,6 +18,7 @@ function EditProductPage() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
+	// Fetch product details. It runs when the component mounts or when productId changes.
 	useEffect(() => {
 		if (!productId) {
 			setError("Product ID is missing");
@@ -35,7 +29,10 @@ function EditProductPage() {
 		const fetchProduct = async () => {
 			try {
 				const response = await fetch(
-					`http://localhost:8080/api/v1/products/${productId}`
+					`http://localhost:8080/api/v1/products/${productId}`,
+					{
+						credentials: "include",
+					}
 				);
 
 				if (!response.ok) {
@@ -58,6 +55,7 @@ function EditProductPage() {
 		fetchProduct();
 	}, [productId]);
 
+	// Handle form submission. It sends a PUT request to the API to update the product.
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!product) return;
@@ -73,6 +71,7 @@ function EditProductPage() {
 					method: "PUT",
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify(product),
+					credentials: "include",
 				}
 			);
 
@@ -100,6 +99,7 @@ function EditProductPage() {
 		}
 	};
 
+	// Handle input changes. It updates the product state with the new values.
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) => {
@@ -116,6 +116,7 @@ function EditProductPage() {
 		navigate(`/products/${productId}`);
 	};
 
+	// Show loading spinner while fetching data
 	if (loading) {
 		return (
 			<div className="flex justify-center items-center h-full w-full py-20">
@@ -124,6 +125,7 @@ function EditProductPage() {
 		);
 	}
 
+	// Show error message if there was an error while fetching the product
 	if (error) {
 		return (
 			<ErrorMessage
@@ -138,6 +140,7 @@ function EditProductPage() {
 		);
 	}
 
+	// Render the edit product form
 	return (
 		<div className="max-w-xl mx-auto p-6">
 			<PageHeader title="Edit Product" />

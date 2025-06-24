@@ -1,12 +1,6 @@
 import clsx from "clsx";
 import React from "react";
-
-interface TextareaProps
-	extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-	label: string;
-	error?: string;
-	handleChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-}
+import type { TextareaProps } from "./types/product";
 
 const Textarea: React.FC<TextareaProps> = ({
 	label,
