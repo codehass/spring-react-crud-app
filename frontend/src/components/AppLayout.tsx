@@ -1,10 +1,28 @@
-import { LogOut, Moon, User } from "lucide-react";
-import { Link, Outlet } from "react-router";
+import { LogOut, User } from "lucide-react";
+import { Outlet, useNavigate } from "react-router";
 import Sidebar from "./Sidebar";
+import { useAuth } from "../hooks/useAuth";
+import type { AuthUser } from "./types/product";
 
 function AppLayout() {
-	const user = {
-		avatar: "",
+	const navigate = useNavigate();
+	const { user } = useAuth() as {
+		user: AuthUser | null;
+	};
+
+	const firstName = user?.name ? user.name.split(" ")[0] : "User";
+
+	const handleLogout = async () => {
+		try {
+			await fetch("http://localhost:8080/logout", {
+				method: "POST",
+				credentials: "include",
+			});
+		} catch (err) {
+			console.error("Logout failed:", err);
+		} finally {
+			navigate("/login");
+		}
 	};
 
 	return (
@@ -17,22 +35,27 @@ function AppLayout() {
 				{/* Top navbar */}
 				<header className="flex items-center justify-end bg-white h-16 px-4 md:px-6 shadow">
 					<div className="flex items-center gap-3">
-						{user.avatar ? (
+						<p>hi, {firstName}</p>
+
+						{user?.avatar ? (
 							<img
 								src={user.avatar}
 								className="w-10 h-10 rounded-full object-cover"
+								alt="User Avatar"
 							/>
 						) : (
 							<div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-violet-700">
 								<User />
 							</div>
 						)}
-						<Link to="/logout">
-							<Moon size={20} color="#7F00FF" />
-						</Link>
-						<Link to="/logout">
+
+						<button
+							onClick={handleLogout}
+							className="p-2 rounded hover:bg-gray-100 transition"
+							aria-label="Logout"
+						>
 							<LogOut size={20} color="#7F00FF" />
-						</Link>
+						</button>
 					</div>
 				</header>
 
