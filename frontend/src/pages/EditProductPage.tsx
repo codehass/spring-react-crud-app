@@ -7,6 +7,7 @@ import Spinner from "../components/Spinner";
 import PageHeader from "../components/PageHeader";
 import ErrorMessage from "../components/ErrorMessage";
 import type { Product } from "../types/product";
+import { endpoints } from "../lib/api";
 
 function EditProductPage() {
 	const { productId } = useParams<{ productId: string }>();
@@ -28,12 +29,9 @@ function EditProductPage() {
 
 		const fetchProduct = async () => {
 			try {
-				const response = await fetch(
-					`http://localhost:8080/api/v1/products/${productId}`,
-					{
-						credentials: "include",
-					}
-				);
+				const response = await fetch(endpoints.products.getById(productId), {
+					credentials: "include",
+				});
 
 				if (!response.ok) {
 					throw new Error(
@@ -65,15 +63,12 @@ function EditProductPage() {
 		setFieldErrors({});
 
 		try {
-			const response = await fetch(
-				`http://localhost:8080/api/v1/products/${product.id}`,
-				{
-					method: "PUT",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(product),
-					credentials: "include",
-				}
-			);
+			const response = await fetch(endpoints.products.update(product.id), {
+				method: "PUT",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(product),
+				credentials: "include",
+			});
 
 			if (!response.ok) {
 				const errorData = await response.json();

@@ -1,9 +1,10 @@
 import GitHubIcon from "../icons/GitHubIcon";
 import GoogleIcon from "../icons/GoogleIcon";
+import { endpoints } from "../lib/api";
 
 const LoginPage = () => {
 	const redirectTo = (provider: "github" | "google") => {
-		window.location.href = `http://localhost:8080/oauth2/authorization/${provider}`;
+		window.location.href = endpoints.auth.loginWithProvider(provider);
 	};
 
 	return (

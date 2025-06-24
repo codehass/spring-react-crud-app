@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from "react-router";
 import Sidebar from "./Sidebar";
 import { useAuth } from "../hooks/useAuth";
 import type { AuthUser } from "../types/product";
+import { endpoints } from "../lib/api";
 
 function AppLayout() {
 	const navigate = useNavigate();
@@ -14,7 +15,7 @@ function AppLayout() {
 
 	const handleLogout = async () => {
 		try {
-			await fetch("http://localhost:8080/logout", {
+			await fetch(endpoints.auth.logout, {
 				method: "POST",
 				credentials: "include",
 			});

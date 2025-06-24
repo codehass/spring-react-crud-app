@@ -4,6 +4,7 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import Textarea from "../components/Textarea";
 import type { NewProduct } from "../types/product";
+import { endpoints } from "../lib/api";
 
 function AddProductPage() {
 	const navigate = useNavigate();
@@ -36,7 +37,7 @@ function AddProductPage() {
 		setFieldErrors({});
 
 		try {
-			const response = await fetch("http://localhost:8080/api/v1/products", {
+			const response = await fetch(endpoints.products.base, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(product),

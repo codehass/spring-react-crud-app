@@ -5,6 +5,7 @@ import PageHeader from "../components/PageHeader";
 import { Pencil } from "lucide-react";
 import ErrorMessage from "../components/ErrorMessage";
 import type { Product } from "../types/product";
+import { endpoints } from "../lib/api";
 
 function ProductDetailsPage() {
 	const { productId } = useParams<{ productId: string }>();
@@ -18,15 +19,11 @@ function ProductDetailsPage() {
 			setLoading(false);
 			return;
 		}
-
 		const fetchProduct = async () => {
 			try {
-				const response = await fetch(
-					`http://localhost:8080/api/v1/products/${productId}`,
-					{
-						credentials: "include",
-					}
-				);
+				const response = await fetch(endpoints.products.getById(productId), {
+					credentials: "include",
+				});
 
 				if (!response.ok) {
 					throw new Error(

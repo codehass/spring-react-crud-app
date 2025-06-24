@@ -6,6 +6,7 @@ import ProductActions from "./ProductActions";
 import ErrorMessage from "./ErrorMessage";
 import ConfirmationModal from "./Confirmation";
 import type { Product } from "../types/product";
+import { endpoints } from "../lib/api";
 
 function ProductDetails() {
 	const [products, setProducts] = useState<Product[]>([]);
@@ -23,13 +24,10 @@ function ProductDetails() {
 	const confirmDelete = async () => {
 		if (deletingProductId === null) return;
 		try {
-			const res = await fetch(
-				`http://localhost:8080/api/v1/products/${deletingProductId}`,
-				{
-					method: "DELETE",
-					credentials: "include",
-				}
-			);
+			const res = await fetch(endpoints.products.delete(deletingProductId), {
+				method: "DELETE",
+				credentials: "include",
+			});
 			if (!res.ok) throw new Error("Failed to delete");
 			setProducts((prev) => prev.filter((p) => p.id !== deletingProductId));
 		} catch (err) {
@@ -43,7 +41,7 @@ function ProductDetails() {
 	useEffect(() => {
 		const fetchProducts = async () => {
 			try {
-				const response = await fetch("http://localhost:8080/api/v1/products", {
+				const response = await fetch(endpoints.products.base, {
 					credentials: "include",
 				});
 
