@@ -41,9 +41,24 @@ cd spring-react-crud-app
 2. **Set up environment variables**
    Copy the example environment file and configure your GitHub and Google OAuth credentials:
 
-```bash
-cp .env.example .env
-```
+- **_Add environment to repo_**
+
+  ```bash
+  cp .env.example .env
+  ```
+
+- **_Then you also add a separate .env inside the frontend directory:_**
+
+  ```bash
+  cd frontend
+  cp .env.example .env
+  ```
+
+- **_Important Notes on .env Files_**
+
+  - Always create your own .env files by copying from .env.example to avoid committing sensitive credentials.
+
+  - Make sure to fill in all required keys and passwords such as database credentials, API keys, and OAuth secrets before running the application.
 
 3. **Start the application using Docker Compose**
 
