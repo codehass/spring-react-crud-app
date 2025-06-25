@@ -1,1 +1,56 @@
-# spring-react-crud-app
+# 🌱 Spring Boot + ⚛️ React Full-Stack Application
+
+A modern full-stack web application built with a Spring Boot backend and a React (Vite) frontend, fully containerized using Docker for seamless local development and deployment.
+
+---
+
+## 🚀 Tech Stack
+
+### 🔧 Backend
+
+- Java 21
+- Spring Boot 3
+- Spring Data JPA / Hibernate
+- PostgreSQL
+
+### 🎨 Frontend
+
+- React 18
+- Vite
+- TypeScript
+- Tailwind CSS
+
+### ⚙️ Infrastructure
+
+- Docker & Docker Compose
+- Nginx (as a reverse proxy)
+
+---
+
+## 🧪 Quick Start
+
+To run the project locally:
+
+1. **Clone the repository**
+
+```bash
+git clone git@github.com:codehass/spring-react-crud-app.git
+cd spring-react-crud-app
+```
+
+2. **Set up environment variables**
+   Copy the example environment file and configure your GitHub and Google OAuth credentials:
+
+```bash
+cp .env.example .env
+```
+
+3. **Start the application using Docker Compose**
+
+```bash
+docker compose up --build -d
+```
+
+## 🌐 Local URLs
+
+- Frontend: http://localhost:5173
