@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
+import { endpoints } from "../lib/api";
 
 export function useAuth() {
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
 
-	console.log("User:", user);
-	console.log("Loading:", loading);
-
+	// Fetch the current user on mount
 	useEffect(() => {
-		fetch("http://localhost:8080/api/v1/me", {
+		fetch(endpoints.auth.currentUser, {
 			credentials: "include",
 		})
 			.then((res) => {
